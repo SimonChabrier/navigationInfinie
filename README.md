@@ -1,0 +1,3 @@
+utilisation de doctrine Tree pour gérer une hierarchie d'arbo de navigation
+Configuration Stable avec "doctrine/orm": "2.19.5" pour le moment "stof/doctrine-extensions-bundle": "^1.11" et +
+n'est pas encore compatbile au delas (problème avec les annotations que doctirne a arrté de supproter à partir de sa version 3)...suivre les mises à jour de stof/doctrine-extensions-bundle...
