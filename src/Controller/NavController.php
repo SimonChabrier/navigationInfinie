@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Form\CategoryType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,6 +88,26 @@ class NavController extends AbstractController
         // redirect to home page
         return $this->redirectToRoute('app_home');
         
+    }
+
+    #[Route('/create/cat', name: 'app_create_category')]
+    public function createCategory(Request $request): Response
+    {
+        //render form 
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->em;
+            $em->persist($category);
+            $em->flush();
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('category/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
 

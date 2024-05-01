@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
+
 #[Gedmo\Tree(type: 'nested')]
 #[Gedmo\Loggable]
 #[ORM\Table(name: 'categories')]

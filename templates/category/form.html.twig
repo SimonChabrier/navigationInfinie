@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+{# {% include '_fragments/_nav/_string_nav.html.twig' %} #}
+{# {% include '_fragments/_nav/_array_nav.html.twig' %} #}
+{# {% include '_fragments/_nav/_collection_nav.html.twig' %} #}
+{# {% include '_fragments/_nav/_toggle_collection_nav.html.twig' %}  #}
+{# {% include '_fragments/_nav/_bootstrap_nav.html.twig' %} #}
+</div>
+
+<div class="container-fluid py-3">
+  {{ form(form) }}
+</div>
+{% endblock %}
