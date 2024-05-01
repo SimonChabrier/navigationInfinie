@@ -50,18 +50,19 @@ $(document).ready(function() {
         // Trouver l'élément ul enfant direct de l'élément li parent
         const childList = $(this).parent().siblings('ul.submenu');
         // Afficher l'élément ul enfant direct
-        childList.collapse('show');
+        setTimeout(function() {
+            childList.collapse('show');
 //$(this).text('-');
+        }, 100); 
     });
 
-    // Masquer l'élément ul enfant direct lorsque la souris quitte la liste des enfants
     $('.nav-item').on('mouseleave', function() {
         // Trouver l'élément ul enfant direct de l'élément li parent
         const childList = $(this).find('ul.submenu');
-        // Masquer l'élément ul enfant direct
-        childList.collapse('hide');
-        // Changer le texte du span pour indiquer l'état actuel
-//$(this).find('.toggle-children').text('+');
+            // Masquer l'élément ul enfant direct
+            childList.collapse('hide');
+            // Changer le texte du span pour indiquer l'état actuel
+// $(this).find('.toggle-children').text('+');
     });
 });
 </script>
