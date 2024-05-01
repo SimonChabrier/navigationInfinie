@@ -1,0 +1,111 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% macro renderCategory(category) %}
+            <li class="nav-item">
+                <div class="d-flex align-items-center">
+
+                    {% if category.children|length > 0 %}
+                    {# <span class="toggle-children">+</span> #}
+                        <a class="nav-link toggle-children" href="{{ path('app_page', {'slug': category.slug}) }}">{{ category.title }}</a>
+                    {% else %}
+                        <a class="nav-link" href="{{ path('app_page', {'slug': category.slug}) }}">{{ category.title }}</a>
+                    {% endif %}
+
+                </div>
+                {% if category.children|length > 0 %}
+                    <ul class="submenu collapse">
+                        {% set sortedChildren = category.children|sort((a, b) => a.getLeft <=> b.getLeft) %}
+                        {% for child in sortedChildren %}
+                            {{ _self.renderCategory(child) }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endmacro %}
+
+        {% for category in categories %}
+            {{ _self.renderCategory(category) }}
+        {% endfor %}
+      </ul>
+      {# <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form> #}
+    </div>
+  </div>
+</nav>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Ajouter un gestionnaire d'événements au survol du span pour enrouler/dérouler les enfants
+    $('.nav-item').on('mouseenter', '.toggle-children', function() {
+        // Trouver l'élément ul enfant direct de l'élément li parent
+        const childList = $(this).parent().siblings('ul.submenu');
+        // Afficher l'élément ul enfant direct
+        childList.collapse('show');
+//$(this).text('-');
+    });
+
+    // Masquer l'élément ul enfant direct lorsque la souris quitte la liste des enfants
+    $('.nav-item').on('mouseleave', function() {
+        // Trouver l'élément ul enfant direct de l'élément li parent
+        const childList = $(this).find('ul.submenu');
+        // Masquer l'élément ul enfant direct
+        childList.collapse('hide');
+        // Changer le texte du span pour indiquer l'état actuel
+//$(this).find('.toggle-children').text('+');
+    });
+});
+</script>
+
+<style type="text/css">
+
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+
+    .toggle-children:hover { 
+        cursor: pointer;
+    }
+    .navbar-nav ul li {
+        list-style-type: none;
+    }
+    .nav-item a:hover {
+    cursor: pointer;
+    color: white !important;
+    background-color: #c6c720;
+    }
+    {# ul.submenu {
+        position: absolute;
+    } #}
+.navbar-expand-lg .nav-item a {
+
+    padding: 10px 25px !important;
+    color: #161616 !important;
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in;
+}
+
+{# after des listes de nav  #}
+.toggle-children::after {
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
+}
+
+</style>

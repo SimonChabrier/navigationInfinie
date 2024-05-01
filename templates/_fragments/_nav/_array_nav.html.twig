@@ -1,0 +1,19 @@
+<h5>Boucle récursive regarde tous les niveaux d'héritage sur un tableau php</h5>
+{# {{dump(navArray)}} #}
+{% macro renderNavCategory(category) %}
+    <li>
+        <a href="{{ path('app_page', {'slug': category.slug}) }}">{{ category.title }}</a>
+        {% if category['__children']|length > 0 %}
+            <ul>
+                {% for child in category['__children'] %}
+                    {{ _self.renderNavCategory(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+<ul>
+    {% for category in navArray %}
+        {{ _self.renderNavCategory(category) }}
+    {% endfor %}
+</ul>

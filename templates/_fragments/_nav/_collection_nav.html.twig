@@ -1,0 +1,21 @@
+<h5>Boucle récursive regarde tous les niveaux d'héritage possible sur un tableau d'objets Category</h5>
+{# {{dump(categories)}} #}
+{% macro renderCategory(category) %}
+    <li>
+        <a href="{{ path('app_page', {'slug': category.slug}) }}">{{ category.title }}</a>
+        {% if category.children|length > 0 %}
+            <ul>
+                {% set sortedChildren = category.children|sort((a, b) => a.getLeft <=> b.getLeft) %}
+                {% for child in sortedChildren %}
+                    {{ _self.renderCategory(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+<ul>
+    {% for category in categories %}
+        {{ _self.renderCategory(category) }}
+    {% endfor %}
+</ul>

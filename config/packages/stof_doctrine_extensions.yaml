@@ -1,0 +1,20 @@
+# Read the documentation: https://symfony.com/doc/current/bundles/StofDoctrineExtensionsBundle/index.html
+# See the official DoctrineExtensions documentation for more details: https://github.com/doctrine-extensions/DoctrineExtensions/tree/main/doc
+stof_doctrine_extensions:
+    default_locale: en_US # locale de traduction par défaut
+    orm:
+        default:
+            tree: true
+            timestampable: true
+            sluggable: true
+            # en test je sais pas si il faut mettre ça ou pas pour utiliser ces fonctionnalités
+            softdeleteable: true
+            loggable: true
+            translatable: true
+
+# tree : L'option tree: true active la gestion des arbres dans Doctrine. Cela permet de créer des entités qui peuvent être organisées sous forme d'arbres hiérarchiques, ce qui est utile pour la modélisation de structures de données telles que les catégories avec des sous-catégories, par exemple.
+# timestampable : L'option timestampable: true active la fonctionnalité de gestion automatique des horodatages dans Doctrine. Cela signifie que les horodatages tels que la date de création et la date de mise à jour seront automatiquement gérés par Doctrine pour les entités auxquelles cette fonctionnalité est appliquée.
+# sluggable : L'option sluggable: true active la génération automatique de slugs pour les entités dans Doctrine. Cela permet de générer automatiquement des slugs à partir des propriétés des entités, ce qui est utile pour créer des URL conviviales pour les moteurs de recherche.
+# softdeleteable : L'option softdeleteable: true active la prise en charge de la suppression douce (soft delete) dans Doctrine. Cela permet de marquer les entités comme supprimées sans les supprimer réellement de la base de données, ce qui peut être utile pour conserver un historique des données ou pour restaurer des données supprimées.
+# loggable : L'option loggable: true active la journalisation des modifications apportées aux entités dans Doctrine. Cela permet de conserver un historique des modifications apportées aux entités, y compris les valeurs précédentes et les utilisateurs qui ont effectué les modifications.
+# translatable : L'option translatable: true active la prise en charge de la traduction des entités dans Doctrine. Cela permet de stocker des traductions des propriétés des entités dans différentes langues, ce qui est utile pour les applications multilingues.

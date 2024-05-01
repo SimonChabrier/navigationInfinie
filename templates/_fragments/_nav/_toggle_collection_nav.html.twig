@@ -1,0 +1,85 @@
+Test
+<h5>Boucle récursive regarde tous les niveaux d'héritage possible sur un tableau d'objets Category</h5>
+{# {{dump(categories)}} #}
+
+<div class="nav">
+    {% macro renderCategory(category) %}
+        <li>
+            <a href="{{ path('app_page', {'slug': category.slug}) }}">{{ category.title }}</a>
+            {% if category.children|length > 0 %}
+                <span class="toggle-children">+</span>
+                <ul style="display: none;">
+                    {% set sortedChildren = category.children|sort((a, b) => a.getLeft <=> b.getLeft) %}
+                    {% for child in sortedChildren %}
+                        {{ _self.renderCategory(child) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endmacro %}
+
+    <ul class="category-list">
+        {% for category in categories %}
+            {{ _self.renderCategory(category) }}
+        {% endfor %}
+    </ul>
+</div>
+
+{# CLICK #}
+{# <script type="text/javascript">
+    $(document).ready(function() {
+    // Ajouter un gestionnaire d'événements au clic sur le span pour enrouler/dérouler les enfants
+    $('.category-list').on('click', '.toggle-children', function() {
+        // Trouver l'élément ul enfant direct de l'élément li parent
+        var childList = $(this).siblings('ul');
+        // Afficher ou masquer l'élément ul enfant direct
+        childList.toggle();
+        // Changer le texte du span pour indiquer l'état actuel
+        $(this).text(function(_, text) {
+            return text === '+' ? '-' : '+';
+        });
+    });
+});
+</script> #}
+
+{# HOVER #}
+<script type="text/javascript">
+$(document).ready(function() {
+    // Ajouter un gestionnaire d'événements au survol du span pour enrouler/dérouler les enfants
+    $('.category-list').on('mouseenter', '.toggle-children', function() {
+        // Trouver l'élément ul enfant direct de l'élément li parent
+        const childList = $(this).siblings('ul');
+        // Afficher l'élément ul enfant direct
+        childList.show();
+        $(this).text('-');
+    });
+
+    $('.category-list').on('mouseleave', 'ul', function() {
+        // Masquer l'élément ul enfant direct lorsque la souris quitte la liste des enfants
+            $(this).hide();
+        // Changer le texte du span pour indiquer l'état actuel
+        $(this).siblings('.toggle-children').text('+');
+    });
+});
+
+</script>
+
+<style type="text/css">
+    span:hover { 
+        cursor: pointer;
+    }
+    .nav {
+        width: 100%;
+        background-color: antiquewhite;
+        padding: 10px;
+    }
+    ul.category-list {
+        display: flex;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    ul.category-list li {
+        list-style-type: none;
+    }
+</style>
