@@ -21,36 +21,29 @@ class NavController extends AbstractController
     #[Route('/{slug?}', name: 'app_home')]
     public function index(?string $slug): Response
     {
-        // Récupérer l'entité Category correspondant au slug
-        $currentCategory = $this->em->getRepository(Category::class)->findOneBy(['id' => 1]);
-        $tree = $this->getTreeNavLinks();
-            
+        // Récupérer l'entité Category correspondant au slug            
         return $this->render('home/index.html.twig', [
-                'tree' => $tree,
+                'tree' => $this->getTreeNavLinks(),
                 'categories' => $this->getTreeNavObject(),
                 'navArray' => $this->getTreeNavArray(),
-                'currentCategory' => $currentCategory,
+                'currentCategory' =>  $this->em->getRepository(Category::class)->findOneBy(['id' => 1]),
             ]);
 
     }
 
     #[Route('/page/{slug}', name: 'app_page')]
     public function page(string $slug, EntityManagerInterface $em): Response
-    {
-        // Récupérer l'entité Category correspondant au slug
-        $currentCategory = $em->getRepository(Category::class)->findOneBy(['slug' => $slug]);
-        $tree = $this->getTreeNavLinks();
-            
+    {            
         return $this->render('home/index.html.twig', [
-                'tree' => $tree,
+                'tree' => $this->getTreeNavLinks(),
                 'categories' => $this->getTreeNavObject(),
                 'navArray' => $this->getTreeNavArray(),
-                'currentCategory' => $currentCategory,
+                'currentCategory' => $em->getRepository(Category::class)->findOneBy(['slug' => $slug])
             ]);
 
     }
 
-    #[Route('/create-nav', name: 'app_create_nav')]
+    #[Route('/create/nav', name: 'app_create_nav')]
     public function createNav(): Response
     {   
         //TODO gèrer created by et updated by
@@ -90,7 +83,8 @@ class NavController extends AbstractController
         // Enregistrement des changements dans la base de données
         $em->flush();
 
-        return new Response('Categories created successfully.');
+        // redirect to home page
+        return $this->redirectToRoute('app_home');
         
     }
 

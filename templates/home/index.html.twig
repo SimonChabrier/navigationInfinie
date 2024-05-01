@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}titre{% endblock %}
+{% block title %}{{ currentCategory.title }}{% endblock %}
 
 {% block body %}
 
@@ -13,6 +13,7 @@
 </div>
 
 <div class="container-fluid py-3">
-    <h1>{{ currentCategory.title }}</h1>
+  {{ currentCategory.title|trans }}
+
 </div>
 {% endblock %}
