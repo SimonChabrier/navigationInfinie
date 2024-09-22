@@ -11,43 +11,40 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class NavController extends AbstractController
-{   
+{
 
     public function __construct(
         private EntityManagerInterface $em,
-    )
-    {
+    ) {
         //
     }
-    
+
     #[Route('/{slug?}', name: 'app_home')]
     public function index(?string $slug): Response
     {
         // Récupérer l'entité Category correspondant au slug            
         return $this->render('home/index.html.twig', [
-                'tree' => $this->getTreeNavLinks(),
-                'categories' => $this->getTreeNavObject(),
-                'navArray' => $this->getTreeNavArray(),
-                'currentCategory' =>  $this->em->getRepository(Category::class)->findOneBy(['id' => 1]),
-            ]);
-
+            'tree' => $this->getTreeNavLinks(),
+            'categories' => $this->getTreeNavObject(),
+            'navArray' => $this->getTreeNavArray(),
+            'currentCategory' =>  $this->em->getRepository(Category::class)->findOneBy(['id' => 1]),
+        ]);
     }
 
     #[Route('/page/{slug}', name: 'app_page')]
     public function page(string $slug, EntityManagerInterface $em): Response
-    {            
+    {
         return $this->render('home/index.html.twig', [
-                'tree' => $this->getTreeNavLinks(),
-                'categories' => $this->getTreeNavObject(),
-                'navArray' => $this->getTreeNavArray(),
-                'currentCategory' => $em->getRepository(Category::class)->findOneBy(['slug' => $slug])
-            ]);
-
+            'tree' => $this->getTreeNavLinks(),
+            'categories' => $this->getTreeNavObject(),
+            'navArray' => $this->getTreeNavArray(),
+            'currentCategory' => $em->getRepository(Category::class)->findOneBy(['slug' => $slug])
+        ]);
     }
 
     #[Route('/create/nav', name: 'app_create_nav')]
     public function createNav(): Response
-    {   
+    {
         //TODO gèrer created by et updated by
         $em = $this->em;
 
@@ -87,12 +84,12 @@ class NavController extends AbstractController
 
         // redirect to home page
         return $this->redirectToRoute('app_home');
-        
     }
 
     #[Route('/create/cat', name: 'app_create_category')]
     public function createCategory(Request $request): Response
     {
+        dd($this->em->getRepository(Category::class)->getTreeNavLinks());
         //render form 
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -113,64 +110,62 @@ class NavController extends AbstractController
 
     // TODO à mettre dans un service
 
-     // retourne une liste de nav fomaté en ul li
-     function getTreeNavLinks() :string
-     {
-         $repo = $this->em->getRepository(Category::class);
-         $options = [
-             'decorate' => true,
-             'rootOpen' => '<ul>',
-             'rootClose' => '</ul>',
-             'childOpen' => '<li>',
-             'childClose' => '</li>',
-             'nodeDecorator' => function($node) {
-                 return '<a href="/page/'.$node['slug'].'">'.$node['title'].'</a>';
-             }
-         ];
-         $tree = $repo->childrenHierarchy(
-             null, /* starting from root nodes */
-             false, /* true: load only root false load all childres */
-             $options
-         );
- 
-         $this->em->clear();
- 
-         return $tree;
- 
-     }
- 
-     // retourne un tableau php
-     function getTreeNavArray() :array
-     {
-         $this->em->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
-         $repo = $this->em->getRepository(Category::class);
-         $tree = $repo->createQueryBuilder('tree')->getQuery()
-             ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)           
-             ->getResult('tree');
- 
-         $tree = $repo->childrenHierarchy(
-             null, /* starting from root nodes */
-             false, /* true: load only root false load all childres */
-             []
-         );  
-         
-         return $tree;
-     }
- 
-     // retour une collection d'objets Category
-     function getTreeNavObject() : array
-     {
-         //* retourne un tableau d'objet pour faire un template twig plus affiné
-         $this->em->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
-         
-         $repo = $this->em->getRepository(Category::class);
-         $tree = $repo->createQueryBuilder('tree')->getQuery()
-             ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)           
-             ->getResult('tree');
-         
-        $this->em->clear();
- 
-         return $tree;
-     }
+    // retourne une liste de nav fomaté en ul li
+    function getTreeNavLinks(): string
+    {
+        $repo = $this->em->getRepository(Category::class);
+        $options = [
+            'decorate' => true,
+            'rootOpen' => '<ul>',
+            'rootClose' => '</ul>',
+            'childOpen' => '<li>',
+            'childClose' => '</li>',
+            'nodeDecorator' => function ($node) {
+                return '<a href="/page/' . $node['slug'] . '">' . $node['title'] . '</a>';
+            }
+        ];
+        $tree = $repo->childrenHierarchy(
+            null, /* starting from root nodes */
+            false, /* true: load only root false load all childres */
+            $options
+        );
 
+        $this->em->clear();
+
+        return $tree;
+    }
+
+    // retourne un tableau php
+    function getTreeNavArray(): array
+    {
+        $this->em->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
+        $repo = $this->em->getRepository(Category::class);
+        $tree = $repo->createQueryBuilder('tree')->getQuery()
+            ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)
+            ->getResult('tree');
+
+        $tree = $repo->childrenHierarchy(
+            null, /* starting from root nodes */
+            false, /* true: load only root false load all childres */
+            []
+        );
+
+        return $tree;
+    }
+
+    // retour une collection d'objets Category
+    function getTreeNavObject(): array
+    {
+        //* retourne un tableau d'objet pour faire un template twig plus affiné
+        $this->em->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
+
+        $repo = $this->em->getRepository(Category::class);
+        $tree = $repo->createQueryBuilder('tree')->getQuery()
+            ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)
+            ->getResult('tree');
+
+        $this->em->clear();
+
+        return $tree;
+    }
 }
